@@ -142,7 +142,7 @@ void detect_edges(IplImage* ramka, int *mask) {
 	cudaMemcpy(d_data, data, dataSize, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_Sobel, mask, SobelSize, cudaMemcpyHostToDevice);
 
-	wypelnijRGB << <GRID_SIZE, BLOCK_SIZE >> >(d_Sobel, d_R, d_G, d_B, d_data, height, width, step, nchannels);
+	convolve << <GRID_SIZE, BLOCK_SIZE >> >(d_Sobel, d_R, d_G, d_B, d_data, height, width, step, nchannels);
 
 	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess) {
