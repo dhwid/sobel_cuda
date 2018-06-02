@@ -38,10 +38,11 @@ void generate_sobel_mask(int *mask) {
 __global__ void convolve(int *Sobel, int *R, int *G, int *B,
 	uchar *data, int height, int width, int step, int nchannels) {
 
-	int i = blockDim.x * blockIdx.x + threadIdx.x + 1;
+	int j= blockDim.x * blockIdx.x + threadIdx.x + 1;
 
-	if (i < (height - 1)) {
-		for (int j = 1; j < width - 1; j++) {
+
+	if (j < (width - 1)) {
+		for (int i = 1; i < height - 1; i++) {
 
 			int temp_pixel[8];
 			int temp_pixels_sum = 0;
@@ -62,6 +63,7 @@ __global__ void convolve(int *Sobel, int *R, int *G, int *B,
 				temp_pixels_sum += abs(temp_pixel[l]);
 
 			R[i*width + j] = temp_pixels_sum / 8;
+
 			///////////////////////
 
 			//clear variables
@@ -103,8 +105,8 @@ __global__ void convolve(int *Sobel, int *R, int *G, int *B,
 		}
 	}
 
-	if (i < (height - 1)) {
-		for (int j = 1; j < width - 1; j++) {
+	if (j < (width - 1)) {
+		for (int i = 1; i < height - 1; i++) {
 			data[i*step + j * nchannels + 0] = R[i* width + j];
 			data[i*step + j * nchannels + 1] = G[i* width + j];
 			data[i*step + j * nchannels + 2] = B[i *width + j];
